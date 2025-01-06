@@ -4,19 +4,21 @@ import time
 from Pose import PoseDetector
 
 
-jamalVid = 'exercises/jamal browner squat.mov'
+jamalVid = '/Users/lennartschaeffer/Projects/SBDAnalyzer/SBDDetection/exercises/jamal browner squat.mov'
 myVid = '/Users/lennartschaeffer/PycharmProjects/PoseEstimation/squat-vid.MOV'
 badDepth = '/Users/lennartschaeffer/PycharmProjects/PoseEstimation/bad depth.mov'
 deadlift = '/Users/lennartschaeffer/PycharmProjects/PoseEstimation/deadlift.MOV'
 bench = '/Users/lennartschaeffer/Projects/SBDAnalyzer/SBDDetection/exercises/bench.mov'
 bench2 = '/Users/lennartschaeffer/PycharmProjects/PoseEstimation/exercises/bench2.mov'
 
-cap = cv2.VideoCapture(bench)
+cap = cv2.VideoCapture(jamalVid)
 
 prev_time = 0
 detector = PoseDetector()
 count = 0
 direction = 0
+maxAngle = 0
+minAngle = 0
 
 while True:
     success, img = cap.read()
@@ -34,17 +36,16 @@ while True:
     img = detector.findPose(img,False)
     landmark_list = detector.findPosition(img)
 
-    maxAngle = 0
-    minAngle = 0
-
     if len(landmark_list) != 0:
 
         angle = detector.findAngle(img,23,25,27)
+        if not minAngle:
+            minAngle = angle
         detector.findAngle(img, 24, 26, 28)
         detector.analyzeDepth(img)
         detector.determineExercise(img)
         #get a percentage score on our angle based on a range
-        percentage = np.interp(angle,(180,300),(0,100))
+        percentage = np.interp(angle,(minAngle,300),(0,100))
 
         #check for completion of repetition
         if percentage == 100: #if we reached 100% of our range, we completed half the rep

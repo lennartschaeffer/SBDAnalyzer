@@ -42,6 +42,7 @@ class PoseDetector:
         return self.landmark_list
 
     def analyzeDepth(self,img,draw=True):
+
         leg_landmarks = {}
         if self.results.pose_landmarks:
             for index, landmark in enumerate(self.results.pose_landmarks.landmark):
@@ -109,8 +110,8 @@ class PoseDetector:
         # Check if the average angle indicates a squat
         if avg_angle < 100:
             cv2.putText(img, 'SQUAT', (300, 150), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-        else:
-            cv2.putText(img, 'BENCH', (300, 150), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+        # else:
+        #     cv2.putText(img, 'BENCH', (300, 150), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
 def main():
     cap = cv2.VideoCapture('exercises/jamal browner squat.mov')
     prev_time = 0
